@@ -8,7 +8,7 @@ import kotlinx.coroutines.SupervisorJob
 class TornDirectorApplication: Application() {
     val applicationScope = CoroutineScope(SupervisorJob())
     val employeesDatabase by lazy { EmployeesDatabase.getInstance(this, applicationScope)}
-    val repository by lazy { EmploeeRepository(employeesDatabase.employeeDatabaseDao()) }
+    val repository by lazy { EmployeeRepository(employeesDatabase.employeeDatabaseDao()) }
 
 
 }

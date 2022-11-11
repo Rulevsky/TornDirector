@@ -8,5 +8,4 @@ import retrofit2.http.Query
 interface RetrofitServices {
     @GET("https://api.torn.com/company/")
     fun getEmployees(@Query("selections") selection: String, @Query("key") key: String): Call<EmployeesList>
-
 }

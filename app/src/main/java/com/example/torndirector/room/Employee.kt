@@ -12,10 +12,9 @@ class Employee(
     @ColumnInfo(name = "Name")
     var employeeName: String,
 
-    @ColumnInfo(name = "Efectiveness")
-    var employeeefEctiveness: Long,
+    @ColumnInfo(name = "Effectiveness")
+    var employeeEffectiveness: String,
 
     @ColumnInfo(name = "Last action")
-    var employeeLastAction: Long,
-) {
-}
+    var employeeLastAction: String,
+)

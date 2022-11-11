@@ -13,8 +13,10 @@ interface EmployeeDatabaseDao {
     suspend fun insert(employee: Employee)
     @Update
     suspend fun update(employee: Employee)
+
     @Query("SELECT * from employees_table WHERE employeeKey = :key")
     suspend fun get(key: Int): Employee?
+
     @Query("DELETE FROM employees_table")
     suspend fun clear()
 

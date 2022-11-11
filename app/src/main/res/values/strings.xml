@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Torn Director</string>
+    <string name="Effectiveness">Effectiveness:</string>
+    <string name="was_online">Was online:</string>
 </resources>

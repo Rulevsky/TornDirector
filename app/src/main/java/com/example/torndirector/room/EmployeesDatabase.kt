@@ -4,9 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 
 @Database(entities = [Employee::class], version = 1, exportSchema = false)
@@ -30,7 +28,7 @@ abstract class EmployeesDatabase : RoomDatabase() {
                         "employees_table"
                     )
                         .fallbackToDestructiveMigration()
-                        .addCallback(EmployeeDatabaseCallback(scope))
+                        //.addCallback(EmployeeDatabaseCallback(scope))
                         .build()
                     INSTANCE = instance
                 }
@@ -38,21 +36,21 @@ abstract class EmployeesDatabase : RoomDatabase() {
             }
         }
 
-        private class EmployeeDatabaseCallback(
-            private val scope: CoroutineScope
-        ) : RoomDatabase.Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                INSTANCE?.let { database ->
-                    scope.launch {
-                        populateDatabase(database.employeeDatabaseDao())
-                    }
-                }
-            }
-
-            suspend fun populateDatabase(employeeDatabaseDao: EmployeeDatabaseDao) {
-                employeeDatabaseDao.insert(Employee(1, "N/A", 0, 0))
-            }
-        }
+//        private class EmployeeDatabaseCallback(
+//            private val scope: CoroutineScope
+//        ) : RoomDatabase.Callback() {
+//            override fun onCreate(db: SupportSQLiteDatabase) {
+//                super.onCreate(db)
+//                INSTANCE?.let { database ->
+//                    scope.launch {
+//                        populateDatabase(database.employeeDatabaseDao())
+//                    }
+//                }
+//            }
+//
+//            suspend fun populateDatabase(employeeDatabaseDao: EmployeeDatabaseDao) {
+//                employeeDatabaseDao.insert(Employee(0, "N/A", "0", "0"))
+//            }
+//        }
     }
 }

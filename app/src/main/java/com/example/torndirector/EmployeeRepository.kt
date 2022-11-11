@@ -5,11 +5,11 @@ import com.example.torndirector.room.Employee
 import com.example.torndirector.room.EmployeeDatabaseDao
 import kotlinx.coroutines.flow.Flow
 
-class EmploeeRepository(
+class EmployeeRepository(
     private val employeeDatabaseDao: EmployeeDatabaseDao
 )
 {
-    val allEmplyoees : Flow<List<Employee>> = employeeDatabaseDao.getAllEmployees()
+    val allEmployees : Flow<List<Employee>> = employeeDatabaseDao.getAllEmployees()
 
     @WorkerThread
     suspend fun insert(employee: Employee){
