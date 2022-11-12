@@ -1,8 +1,9 @@
-package com.example.torndirector.retrofit.ui.emploeeListView
+package com.example.torndirector.ui.emploeeListView
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView

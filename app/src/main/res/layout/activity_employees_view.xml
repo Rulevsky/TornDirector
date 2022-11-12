@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".retrofit.ui.emploeeListView.EmployeesViewActivity">
+    tools:context=".ui.emploeeListView.EmployeesViewActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/emploeesRecyclerView"
