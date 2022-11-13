@@ -4,8 +4,9 @@ import androidx.annotation.WorkerThread
 import com.example.torndirector.room.Employee
 import com.example.torndirector.room.EmployeeDatabaseDao
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class EmployeeRepository(
+class EmployeeRepository @Inject constructor(
     private val employeeDatabaseDao: EmployeeDatabaseDao
 )
 {

@@ -1,33 +1,43 @@
 package com.example.torndirector.ui.emploeeListView
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
-
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.torndirector.R
 import com.example.torndirector.TornDirectorApplication
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
+class EmployeesViewActivity : Fragment(R.layout.employees_list_fragment) {
 
-class EmployeesViewActivity : AppCompatActivity() {
-    private val employeesListViewModel: EmployeesListViewModel by viewModels {
-        EmployeesListViewModelFactory((application as TornDirectorApplication).repository)
-    }
+    private val employeesListViewModel: EmployeesListViewModel by viewModels<EmployeesListViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_employees_view)
-
-        val recyclerView = findViewById<RecyclerView>(R.id.emploeesRecyclerView)
-        val adapter = EmployeeViewAdapter()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        var adapter = EmployeeViewAdapter()
+        var view = inflater.inflate(R.layout.employees_list_fragment, container, false)
+        var recyclerView = view.findViewById<RecyclerView>(R.id.employeeLisRecViewFrag)
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        employeesListViewModel.allEmployees.observe(this, Observer { employees ->
-            employees?.let {adapter.submitList(it)}
+        employeesListViewModel.allEmployees.observe(viewLifecycleOwner, Observer { employees ->
+            employees?.let { adapter.submitList(it) }
+
         })
+         return view
     }
+
 }
 
 

@@ -5,14 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <androidx.fragment.app.FragmentContainerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.example.torndirector.ui.emploeeListView.MainFragment"
+        tools:layout="@layout/main_fragment" />
 
-    <Button
-        android:id="@+id/buttonMagic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Magic"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:menu="@menu/navigation_items" />
 </androidx.constraintlayout.widget.ConstraintLayout>

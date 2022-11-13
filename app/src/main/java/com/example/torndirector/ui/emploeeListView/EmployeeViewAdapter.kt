@@ -48,6 +48,8 @@ class EmployeeViewAdapter :
         }
     }
 
+
+
     class EmployeesComparator : DiffUtil.ItemCallback<Employee>() {
         override fun areItemsTheSame(oldItem: Employee, newItem: Employee): Boolean {
             return oldItem === newItem
