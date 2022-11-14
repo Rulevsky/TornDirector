@@ -2,9 +2,8 @@ package com.example.torndirector.ui.emploeeListView
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.torndirector.EmployeeRepository
+import com.example.torndirector.repositories.EmployeeRepository
 import com.example.torndirector.room.Employee
-import dagger.Provides
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

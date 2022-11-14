@@ -12,8 +12,8 @@ import com.example.torndirector.R
 import com.example.torndirector.room.Employee
 
 
-class EmployeeViewAdapter :
-    ListAdapter<Employee, EmployeeViewAdapter.EmployeeViewHolder>(EmployeesComparator()) {
+class EmployeeListAdapter :
+    ListAdapter<Employee, EmployeeListAdapter.EmployeeViewHolder>(EmployeesComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmployeeViewHolder {
         return EmployeeViewHolder.create(parent)

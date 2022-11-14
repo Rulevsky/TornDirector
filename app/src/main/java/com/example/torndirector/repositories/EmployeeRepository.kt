@@ -1,4 +1,4 @@
-package com.example.torndirector
+package com.example.torndirector.repositories
 
 import androidx.annotation.WorkerThread
 import com.example.torndirector.room.Employee
