@@ -21,6 +21,8 @@ class EmployeeRepository @Inject constructor(
     suspend fun update(employee: Employee){
         employeeDatabaseDao.update(employee)
     }
-
-
+    @WorkerThread
+    suspend fun clear(){
+        employeeDatabaseDao.clear()
+    }
 }

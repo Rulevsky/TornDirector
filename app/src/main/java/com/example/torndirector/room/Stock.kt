@@ -13,10 +13,8 @@ data class Stock (
     val inStock: Long,
 
     @ColumnInfo(name = "in order")
-    val inOrder:Long,
+    val onOrder:Long,
 
     @ColumnInfo(name = "In stock today")
-    val inStockToday: Long = inStock + inOrder
+    val inStockToday: Long = inStock + onOrder
 )
-{
-}

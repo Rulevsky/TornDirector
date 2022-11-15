@@ -29,14 +29,11 @@ class EmployeeListAdapter :
 
     class EmployeeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
-        private val effectivenessSetTextView: TextView =
-            itemView.findViewById(R.id.effectivenessTextView)
+        private val effectivenessSetTextView: TextView = itemView.findViewById(R.id.effectivenessTextView)
         private val lastActionTextView: TextView = itemView.findViewById(R.id.lastActionTextView)
 
         fun bindName(text: String?) { nameTextView.text = text}
-
         fun bindEffectiveness(text: String?) { effectivenessSetTextView.text = text }
-
         fun bindLastAction(text: String?) { lastActionTextView.text = text }
 
         companion object {
@@ -47,8 +44,6 @@ class EmployeeListAdapter :
             }
         }
     }
-
-
 
     class EmployeesComparator : DiffUtil.ItemCallback<Employee>() {
         override fun areItemsTheSame(oldItem: Employee, newItem: Employee): Boolean {

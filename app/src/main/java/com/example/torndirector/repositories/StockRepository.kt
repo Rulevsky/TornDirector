@@ -10,7 +10,7 @@ import javax.inject.Inject
 class StockRepository @Inject constructor(
     private val stockDatabaseDao: StockDatabaseDao
 ) {
-    val stock: Flow<List<Stock>> = stockDatabaseDao.getStockDetails()
+    val stock: Flow<Stock> = stockDatabaseDao.getStockDetails()
 
     @WorkerThread
     suspend fun insert(stock: Stock){

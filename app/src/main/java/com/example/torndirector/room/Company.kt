@@ -23,6 +23,4 @@ data class Company(
 
     @ColumnInfo(name = "Weekly income")
     val weeklyIncome: String,
-) {
-
-}
+)

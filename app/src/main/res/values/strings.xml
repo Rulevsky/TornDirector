@@ -1,5 +1,19 @@
 <resources>
+    <string name="company">Company</string>
+    <string name="employees">Employees</string>
+    <string name="settings">Settings</string>
+
+    <string name="rating">Rating:</string>
+    <string name="employees_in_employees">Employees:</string>
+    <string name="daily_income">Daily income:</string>
+    <string name="weekly_income">Weekly income:</string>
+    <string name="in_stock">In stock:</string>
+    <string name="on_order">On order:</string>
+    <string name="total_stock">Total stock:</string>
+
     <string name="app_name">Torn Director</string>
-    <string name="Effectiveness">Effectiveness:</string>
+    <string name="effectiveness">Effectiveness:</string>
     <string name="was_online">Was online:</string>
+
+
 </resources>

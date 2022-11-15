@@ -10,7 +10,6 @@ interface StockDatabaseDao {
     suspend fun update(stock: Stock)
     @Query("DELETE FROM stock_table")
     suspend fun clear()
-
     @Query("SELECT * from stock_table ORDER BY stockKey ASC")
-    fun getStockDetails(): Flow<List<Stock>>
+    fun getStockDetails(): Flow<Stock>
 }

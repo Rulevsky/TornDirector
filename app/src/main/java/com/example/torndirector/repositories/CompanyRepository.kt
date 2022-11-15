@@ -22,6 +22,4 @@ class CompanyRepository @Inject constructor(
     suspend fun update(companyDetails: Company) {
         companyDatabaseDao.update(companyDetails)
     }
-
-
 }

@@ -17,6 +17,4 @@ data class CompanyDetails(
 
     @SerializedName("weekly_income")
     val weeklyIncome: String,
-) {
-
-}
+)

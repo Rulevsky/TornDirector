@@ -1,7 +1,6 @@
 package com.example.torndirector.ui.company
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,20 +22,16 @@ class CompanyFragment : Fragment(R.layout.company_fragment) {
     private lateinit var inOrderTextView: TextView
     private lateinit var totalStockTextView: TextView
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.company_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.e("tag", " onViewCreated")
         ratingTextView = view.findViewById(R.id.ratingTextView)
         hiredEmployeesTextView = view.findViewById(R.id.hiredEmployeesTextView)
         dailyIncomeTextView = view.findViewById(R.id.dailyIncomeTextView)
@@ -45,21 +40,16 @@ class CompanyFragment : Fragment(R.layout.company_fragment) {
         inOrderTextView = view.findViewById(R.id.inOrderTextView)
         totalStockTextView = view.findViewById(R.id.totalStockTextView)
 
-        companyViewModel.companyDetails.observe(viewLifecycleOwner, Observer { it ->
+        companyViewModel.companyDetails.observe(viewLifecycleOwner){ it ->
             ratingTextView.text = it?.rating
             hiredEmployeesTextView.text = it?.employeesHired + "/" + it?.employeesCapacity
             dailyIncomeTextView.text = it?.dailyIncome
             weeklyIncomeTextView.text = it?.weeklyIncome
-        })
-        var summ : Long = 0
-        companyViewModel.stockDetails.observe(viewLifecycleOwner, Observer { it->
-
-//            inStockTextView.text = it?.forEach()
-//            inOrderTextView.text =
-//            totalStockTextView.text =
-        })
-
+        }
+        companyViewModel.stockDetails.observe(viewLifecycleOwner){ it->
+            inStockTextView.text = it?.inStock.toString()
+            inOrderTextView.text = it?.onOrder.toString()
+            totalStockTextView.text = it?.inStockToday.toString()
+        }
     }
-
-
 }

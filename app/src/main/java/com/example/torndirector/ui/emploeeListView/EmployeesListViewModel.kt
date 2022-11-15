@@ -1,6 +1,5 @@
 package com.example.torndirector.ui.emploeeListView
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.torndirector.repositories.EmployeeRepository
 import com.example.torndirector.room.Employee
@@ -15,7 +14,6 @@ class EmployeesListViewModel @Inject constructor (private val repository: Employ
     fun insert(employee: Employee) = viewModelScope.launch{
         repository.insert(employee)
     }
-
 }
 
 class EmployeesListViewModelFactory(private val repository: EmployeeRepository) :
@@ -24,7 +22,6 @@ class EmployeesListViewModelFactory(private val repository: EmployeeRepository) 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EmployeesListViewModel::class.java)) {
             return EmployeesListViewModel( repository) as T
-            Log.e("TAG", "EmployeesListViewModelFactory")
         }
         throw IllegalArgumentException("Unknown ViewModelClass")
     }

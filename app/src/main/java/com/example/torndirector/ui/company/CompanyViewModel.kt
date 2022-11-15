@@ -17,12 +17,10 @@ class CompanyViewModel @Inject constructor(
 ) :
     ViewModel() {
     val companyDetails: LiveData<Company> = repository.companyDetails.asLiveData()
-    val stockDetails: LiveData<List<Stock>> = stockRepository.stock.asLiveData()
+    val stockDetails: LiveData<Stock> = stockRepository.stock.asLiveData()
     fun insert(details: Company) = viewModelScope.launch {
         repository.insert(details)
     }
-
-
 }
 
 class CompanyDetailsViewModelFactory(private val repository: CompanyRepository, private val stockRepository: StockRepository) :

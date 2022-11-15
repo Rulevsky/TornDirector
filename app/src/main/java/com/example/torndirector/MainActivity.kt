@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.commitNow
 import com.example.torndirector.repositories.CompanyRepository
+import com.example.torndirector.repositories.EmployeeRepository
 import com.example.torndirector.repositories.StockRepository
 import com.example.torndirector.retrofit.Common
 import com.example.torndirector.retrofit.RetrofitServices
@@ -14,7 +15,8 @@ import com.example.torndirector.room.*
 
 import com.example.torndirector.ui.company.CompanyFragment
 import com.example.torndirector.ui.emploeeListView.EmployeesListFragment
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.example.torndirector.ui.settings.SettingsFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
@@ -22,89 +24,77 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
-
 /*
-check
-insert and update repos and db
-sum in inStock, inOrder, TotalDaily
-ui of company fragment
-clear code
+Make Settings : apikey, description
+Pull to refresh
 
-*/
+fix: concatenation in CompanyFragment in hiredEmployees
+ */
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var companyDatabaseDao: CompanyDatabaseDao
-
     @Inject
     lateinit var companyRepository: CompanyRepository
-
     @Inject
     lateinit var stockRepository: StockRepository
+    @Inject
+    lateinit var employeeRepository: EmployeeRepository
 
-    private lateinit var companyDetails: CompanyDetails
-    private lateinit var stockDetailsModel: StockDetailsModel
     private val key = "XLeZozdhkemWL4hl"
-    private lateinit var employeeDatabase: EmployeesDatabase
     lateinit var fetchedEmployeesMap: Map<String, EmployeeModel>
-    //lateinit var bottomNavBar: BottomNavigationView
-
-    lateinit var companyAction: BottomNavigationItemView
-    lateinit var employeesAction: BottomNavigationItemView
-    lateinit var settingsAction: BottomNavigationItemView
-
+    private lateinit var bottomNavBar: BottomNavigationView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        companyAction = findViewById(R.id.companyAction)
-        employeesAction = findViewById(R.id.employeesAction)
-        settingsAction = findViewById(R.id.settingsAction)
 
-        employeeDatabase =
-            EmployeesDatabase.getInstance(applicationContext, CoroutineScope(Dispatchers.IO))
-
+        bottomNavBar = findViewById(R.id.bottom_navigation)
         fetching()
-
-        companyAction.setOnClickListener { companyActionPressed() }
-        employeesAction.setOnClickListener { onEmployeeAction() }
-        settingsAction.setOnClickListener { employeeActionPressed() }
-
+        bottomNavBar.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.companyAction -> {
+                    onCompanyAction()
+                    true
+                }
+                R.id.employeesAction -> {
+                    onEmployeeAction()
+                    true
+                }
+                R.id.settingsAction -> {
+                    onSettingsAction()
+                    true
+                }
+                else -> false
+            }
+        }
     }
-
 
     private fun onEmployeeAction() {
         supportFragmentManager.commitNow {
             replace(R.id.fragment_container_view, EmployeesListFragment())
         }
     }
-
-    fun companyActionPressed() {
-
+    private fun onCompanyAction() {
         supportFragmentManager.commitNow {
             replace(R.id.fragment_container_view, CompanyFragment())
-
         }
     }
-
-    fun employeeActionPressed() {
+    private fun onSettingsAction() {
         supportFragmentManager.commitNow {
-            replace(R.id.fragment_container_view, EmployeesListFragment())
+            replace(R.id.fragment_container_view, SettingsFragment())
         }
     }
-
+    //Do some Network Requests
     private fun fetching() {
-        Thread {
-            //Do some Network Request
             fetchCompanyData()
             fetchStockData()
             fetchEmployeesData()
-        }.start()
     }
 
-    fun fetchCompanyData() {
+    private fun fetchCompanyData() {
         val cService: RetrofitServices = Common.retrofitService
         cService.getCompanyDetails("profile", key)
             .enqueue(object : Callback<CompanyModel> {
@@ -112,7 +102,6 @@ class MainActivity : AppCompatActivity() {
                     call: Call<CompanyModel>,
                     response: Response<CompanyModel>
                 ) {
-
                     CoroutineScope(SupervisorJob()).launch {
                         companyRepository.insert(
                             Company(
@@ -126,7 +115,6 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-
                 override fun onFailure(call: Call<CompanyModel>, t: Throwable) {
                     Log.e("onFailure", "failed", t)
                 }
@@ -134,35 +122,44 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
-    fun fetchStockData() {
+    private fun fetchStockData() {
         val sService: RetrofitServices = Common.retrofitService
         sService.getStockDetails("stock", key)
             .enqueue(object : Callback<StockModel> {
                 override fun onResponse(call: Call<StockModel>, response: Response<StockModel>) {
+                    // maybe better launch(lazy) to don't insert 0 values in db before forEach ends
                     CoroutineScope(SupervisorJob()).launch {
-                        var i = 1
-                            stockRepository.clear()
-                            response.body()!!.companyStock.forEach{ entry ->
-                            stockRepository.insert(Stock(0, entry.value.inStock, entry.value.inOrder))
+                        stockRepository.clear()
+                        var inStockGeneral: Long = 0
+                        var inOrderGeneral: Long = 0
+                        response.body()!!.companyStock.forEach { entry ->
+                            inStockGeneral += entry.value.inStock
+                            inOrderGeneral += entry.value.inOrder
                         }
+                        stockRepository.insert(
+                            Stock(
+                                0,
+                                inStockGeneral,
+                                inOrderGeneral
+                            )
+                        )
                     }
-
                 }
-
                 override fun onFailure(call: Call<StockModel>, t: Throwable) {
                     Log.e("onFailure", "failed", t)
                 }
-
             })
-
     }
 
     private fun fetchEmployeesData() {
         val mService: RetrofitServices = Common.retrofitService
         mService.getEmployees(selection = "employees", key = key)
             .enqueue(object : Callback<EmployeesList> {
-                override fun onResponse(call: Call<EmployeesList>, response: Response<EmployeesList>) {
-                    fetchedEmployeesMap = response.body()!!.employeersList
+                override fun onResponse(
+                    call: Call<EmployeesList>,
+                    response: Response<EmployeesList>
+                ) {
+                    fetchedEmployeesMap = response.body()!!.employeesList
                     var i = 1
                     fetchedEmployeesMap.forEach { entry ->
                         mapToList(
@@ -174,30 +171,16 @@ class MainActivity : AppCompatActivity() {
                         i++
                     }
                 }
-
                 override fun onFailure(call: Call<EmployeesList>, t: Throwable) {
                     Log.e("onFailure", "failed", t)
                 }
             })
     }
 
-    fun mapToList(key: Int, name: String, effectiveness: String, lastAction: String) {
+    private fun mapToList(key: Int, name: String, effectiveness: String, lastAction: String) {
         CoroutineScope(SupervisorJob()).launch {
-            employeeDatabase.employeeDatabaseDao().clear()
-            employeeDatabase.employeeDatabaseDao()
-                .insert(Employee(key, name, effectiveness, lastAction))
+            employeeRepository.clear()
+            employeeRepository.insert(Employee(key, name, effectiveness, lastAction))
         }
     }
-
 }
-
-
-
-//                    CoroutineScope(SupervisorJob()).launch {
-//                        stockRepository.clear()
-//                        var i = 1
-//                        response.body()!!.forEach { entry ->
-//                            stockRepository.insert(Stock(i, entry.inStock, entry.inOrder))
-//                        }
-//
-//                    }

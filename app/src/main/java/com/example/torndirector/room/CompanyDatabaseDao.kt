@@ -1,8 +1,6 @@
 package com.example.torndirector.room
 
 import androidx.room.*
-import com.example.torndirector.retrofit.model.CompanyDetails
-import com.example.torndirector.retrofit.model.CompanyModel
 import kotlinx.coroutines.flow.Flow
 
 

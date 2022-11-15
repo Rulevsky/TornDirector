@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/companyAction"
+        android:icon="@drawable/store"
+        android:title="@string/company"
+
+        />
+    <item
+        android:id="@+id/employeesAction"
+        android:icon="@drawable/badge"
+        android:title="@string/employees"
+
+        />
+
+    <item
+        android:id="@+id/settingsAction"
+        android:icon="@drawable/settings"
+        android:title="@string/settings"
+
+        />
+</menu>
