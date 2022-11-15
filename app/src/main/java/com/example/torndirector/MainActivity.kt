@@ -29,6 +29,7 @@ Make Settings : apikey, description
 Pull to refresh
 
 fix: concatenation in CompanyFragment in hiredEmployees
+clean mainactivity
  */
 
 @AndroidEntryPoint
