@@ -4,6 +4,7 @@ package com.example.torndirector.utils
 import android.content.Context
 import android.content.res.Resources
 import android.util.Log
+import android.widget.Toast
 
 import androidx.fragment.app.FragmentActivity
 import com.example.torndirector.R
@@ -16,4 +17,5 @@ import com.example.torndirector.R
         Log.e("tag", apiKeyText.toString())
         return apiKeyText
     }
+
 

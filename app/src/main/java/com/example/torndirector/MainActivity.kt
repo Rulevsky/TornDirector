@@ -3,7 +3,11 @@ package com.example.torndirector
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commitNow
 import com.example.torndirector.repositories.CompanyRepository
 import com.example.torndirector.repositories.EmployeeRepository
@@ -54,10 +58,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //key = getApiKey(this, resources).toString()
-        key = "XLeZozdhkemWL4hl"
         bottomNavBar = findViewById(R.id.bottom_navigation)
-        fetching()
+        getData(this)
+
         bottomNavBar.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.companyAction -> {
@@ -95,6 +98,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getData(activity: MainActivity) = runBlocking {
+        key = getApiKey(activity, resources).toString()
+        fetching()
+    }
+
     //Do some Network Requests
     private fun fetching() {
         fetchCompanyData()
@@ -110,21 +118,21 @@ class MainActivity : AppCompatActivity() {
                     call: Call<CompanyModel>,
                     response: Response<CompanyModel>
                 ) {
-
-
                     CoroutineScope(SupervisorJob()).launch {
-                        companyRepository.insert(
-                            Company(
-                                0,
-                                response.body()!!.company.rating,
-                                response.body()!!.company.employeesHired,
-                                response.body()!!.company.employeesCapacity,
-                                response.body()!!.company.dailyIncome,
-                                response.body()!!.company.weeklyIncome
+                        try {
+                            companyRepository.insert(
+                                Company(
+                                    0,
+                                    response.body()!!.company.rating,
+                                    response.body()!!.company.employeesHired,
+                                    response.body()!!.company.employeesCapacity,
+                                    response.body()!!.company.dailyIncome,
+                                    response.body()!!.company.weeklyIncome
+                                )
                             )
-                        )
+                        } catch (e: Exception) { //showErrorApiKey()
+                        }
                     }
-
                 }
 
                 override fun onFailure(call: Call<CompanyModel>, t: Throwable) {
@@ -144,17 +152,20 @@ class MainActivity : AppCompatActivity() {
                         stockRepository.clear()
                         var inStockGeneral: Long = 0
                         var inOrderGeneral: Long = 0
-                        response.body()!!.companyStock.forEach { entry ->
-                            inStockGeneral += entry.value.inStock
-                            inOrderGeneral += entry.value.inOrder
-                        }
-                        stockRepository.insert(
-                            Stock(
-                                0,
-                                inStockGeneral,
-                                inOrderGeneral
+                        try {
+                            response.body()!!.companyStock.forEach { entry ->
+                                inStockGeneral += entry.value.inStock
+                                inOrderGeneral += entry.value.inOrder
+                            }
+                            stockRepository.insert(
+                                Stock(
+                                    0,
+                                    inStockGeneral,
+                                    inOrderGeneral
+                                )
                             )
-                        )
+                        } catch (e: Exception) { //showErrorApiKey()
+                        }
                     }
                 }
 
@@ -173,8 +184,10 @@ class MainActivity : AppCompatActivity() {
                     call: Call<EmployeesModel>,
                     response: Response<EmployeesModel>
                 ) {
+                    try {
                         fetchedEmployeesMap = response.body()!!.employeesList
                         var i = 1
+
                         fetchedEmployeesMap.forEach { entry ->
                             mapToList(
                                 i,
@@ -184,6 +197,9 @@ class MainActivity : AppCompatActivity() {
                             )
                             i++
                         }
+                    } catch (e: Exception) {
+                        showErrorApiKey()
+                    }
                 }
 
 
@@ -198,6 +214,12 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(SupervisorJob()).launch {
             employeeRepository.clear()
             employeeRepository.insert(Employee(key, name, effectiveness, lastAction))
+        }
+    }
+
+    private fun showErrorApiKey() {
+        runOnUiThread() {
+            Toast.makeText(applicationContext, "Looks like apikey is wrong", LENGTH_LONG).show()
         }
     }
 }
