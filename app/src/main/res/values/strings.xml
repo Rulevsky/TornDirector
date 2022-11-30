@@ -15,5 +15,6 @@
     <string name="effectiveness">Effectiveness:</string>
     <string name="was_online">Was online:</string>
 
-
+    <string name="enter_apikey">Enter here</string>
+    <string name="saved_apikey_key">1</string>
 </resources>

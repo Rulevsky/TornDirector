@@ -1,9 +1,9 @@
 package com.example.torndirector
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commitNow
 import com.example.torndirector.repositories.CompanyRepository
 import com.example.torndirector.repositories.EmployeeRepository
@@ -12,18 +12,18 @@ import com.example.torndirector.retrofit.Common
 import com.example.torndirector.retrofit.RetrofitServices
 import com.example.torndirector.retrofit.model.*
 import com.example.torndirector.room.*
-
 import com.example.torndirector.ui.company.CompanyFragment
 import com.example.torndirector.ui.emploeeListView.EmployeesListFragment
 import com.example.torndirector.ui.settings.SettingsFragment
+import com.example.torndirector.utils.getApiKey
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
+
 /*
 Make Settings : apikey, description
 Pull to refresh
@@ -36,14 +36,17 @@ clean mainactivity
 class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var companyDatabaseDao: CompanyDatabaseDao
+
     @Inject
     lateinit var companyRepository: CompanyRepository
+
     @Inject
     lateinit var stockRepository: StockRepository
+
     @Inject
     lateinit var employeeRepository: EmployeeRepository
 
-    private val key = "XLeZozdhkemWL4hl"
+    private lateinit var key: String
     lateinit var fetchedEmployeesMap: Map<String, EmployeeModel>
     private lateinit var bottomNavBar: BottomNavigationView
 
@@ -51,7 +54,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //key = getApiKey(this, resources).toString()
+        key = "XLeZozdhkemWL4hl"
         bottomNavBar = findViewById(R.id.bottom_navigation)
         fetching()
         bottomNavBar.setOnItemSelectedListener { item ->
@@ -78,21 +82,24 @@ class MainActivity : AppCompatActivity() {
             replace(R.id.fragment_container_view, EmployeesListFragment())
         }
     }
+
     private fun onCompanyAction() {
         supportFragmentManager.commitNow {
             replace(R.id.fragment_container_view, CompanyFragment())
         }
     }
+
     private fun onSettingsAction() {
         supportFragmentManager.commitNow {
             replace(R.id.fragment_container_view, SettingsFragment())
         }
     }
+
     //Do some Network Requests
     private fun fetching() {
-            fetchCompanyData()
-            fetchStockData()
-            fetchEmployeesData()
+        fetchCompanyData()
+        fetchStockData()
+        fetchEmployeesData()
     }
 
     private fun fetchCompanyData() {
@@ -103,6 +110,8 @@ class MainActivity : AppCompatActivity() {
                     call: Call<CompanyModel>,
                     response: Response<CompanyModel>
                 ) {
+
+
                     CoroutineScope(SupervisorJob()).launch {
                         companyRepository.insert(
                             Company(
@@ -115,7 +124,9 @@ class MainActivity : AppCompatActivity() {
                             )
                         )
                     }
+
                 }
+
                 override fun onFailure(call: Call<CompanyModel>, t: Throwable) {
                     Log.e("onFailure", "failed", t)
                 }
@@ -146,36 +157,41 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
+
                 override fun onFailure(call: Call<StockModel>, t: Throwable) {
                     Log.e("onFailure", "failed", t)
                 }
             })
     }
 
+
     private fun fetchEmployeesData() {
         val mService: RetrofitServices = Common.retrofitService
         mService.getEmployees(selection = "employees", key = key)
-            .enqueue(object : Callback<EmployeesList> {
+            .enqueue(object : Callback<EmployeesModel> {
                 override fun onResponse(
-                    call: Call<EmployeesList>,
-                    response: Response<EmployeesList>
+                    call: Call<EmployeesModel>,
+                    response: Response<EmployeesModel>
                 ) {
-                    fetchedEmployeesMap = response.body()!!.employeesList
-                    var i = 1
-                    fetchedEmployeesMap.forEach { entry ->
-                        mapToList(
-                            i,
-                            entry.value.name,
-                            entry.value.total.total,
-                            entry.value.relative.relative
-                        )
-                        i++
-                    }
+                        fetchedEmployeesMap = response.body()!!.employeesList
+                        var i = 1
+                        fetchedEmployeesMap.forEach { entry ->
+                            mapToList(
+                                i,
+                                entry.value.name,
+                                entry.value.total.total,
+                                entry.value.relative.relative
+                            )
+                            i++
+                        }
                 }
-                override fun onFailure(call: Call<EmployeesList>, t: Throwable) {
+
+
+                override fun onFailure(call: Call<EmployeesModel>, t: Throwable) {
                     Log.e("onFailure", "failed", t)
                 }
             })
+
     }
 
     private fun mapToList(key: Int, name: String, effectiveness: String, lastAction: String) {
