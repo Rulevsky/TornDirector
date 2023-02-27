@@ -10,11 +10,25 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.example.torndirector.R
+import com.example.torndirector.repositories.SettingsRepository
+import com.example.torndirector.room.Settings
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-import com.example.torndirector.utils.getApiKey
-
-
+@AndroidEntryPoint
 class SettingsFragment : Fragment(R.layout.settings_fragment) {
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
+
+    var key : String = "init"
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        key = readApiKey()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,29 +42,37 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         super.onViewCreated(view, savedInstanceState)
         val apiKeyEditText = view.findViewById<EditText>(R.id.apiKeyEditText)
         val saveBtn = view.findViewById<Button>(R.id.saveBtn)
-        saveBtn.setOnClickListener { onSaveBtnClick(apiKeyEditText)}
-        apiKeyEditText.setText(getApiKey(activity, resources))
+        saveBtn.setOnClickListener { onSaveBtnClick(apiKeyEditText) }
+        apiKeyEditText.setText(key)
 
+        Log.e("tag", "proverka sveazi")
 
     }
 
     private fun onSaveBtnClick(apiKey: EditText) {
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-        with (sharedPref.edit()) {
-            putString(R.string.saved_apikey_key.toString(), apiKey.text.toString())
-            apply()
-        }
+        CoroutineScope(SupervisorJob()).launch() { writeApiKey(apiKey.text.toString()) }
+        Log.e("tag", "savebtn")
     }
 
-//    private fun getApiKey(): String? {
-//        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-//        val defaultValue = resources.getString(R.string.enter_apikey)
-//        val apiKeyText = sharedPref?.getString(R.string.saved_apikey_key.toString(), defaultValue)
-//        Log.e("tag", apiKeyText.toString())
-//        return apiKeyText
-//    }
+    private fun readApiKey(): String {
+        CoroutineScope(SupervisorJob()).launch() {
+            var settings = settingsRepository.findSettingsByName("apiKey")
+            if (settings != null) {
+                key = settings.settingsValue
+            } else {
+                key = "EnterKey"
+                settingsRepository.insert(Settings(1, "apiKey", key))
+            }
+        }
+        return key
+    }
 
-
+    private fun writeApiKey(apiKey: String) {
+        CoroutineScope(SupervisorJob()).launch() {
+            settingsRepository.update(Settings(1, "apiKey", apiKey.toString()))
+            Log.e("tag", "write")
+        }
+    }
 }
 
 

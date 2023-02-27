@@ -9,12 +9,12 @@ import javax.inject.Inject
 
 
 class CompanyRepository @Inject constructor(
-    private val companyDatabaseDao: CompanyDatabaseDao
-){
+     val companyDatabaseDao: CompanyDatabaseDao
+) {
     val companyDetails: Flow<Company> = companyDatabaseDao.getCompanyDetails()
 
     @WorkerThread
-    suspend fun insert(companyDetails: Company){
+    suspend fun insert(companyDetails: Company) {
         companyDatabaseDao.insert(companyDetails)
     }
 
@@ -22,4 +22,5 @@ class CompanyRepository @Inject constructor(
     suspend fun update(companyDetails: Company) {
         companyDatabaseDao.update(companyDetails)
     }
+
 }
