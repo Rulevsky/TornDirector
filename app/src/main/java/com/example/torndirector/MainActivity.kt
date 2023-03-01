@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commitNow
 import androidx.work.*
+import androidx.work.WorkManager
 import com.example.torndirector.retrofit.model.*
 import com.example.torndirector.room.*
 import com.example.torndirector.ui.company.CompanyFragment

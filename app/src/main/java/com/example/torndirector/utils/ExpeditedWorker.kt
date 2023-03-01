@@ -49,12 +49,12 @@ CoroutineWorker(appContext, workerParams){
         val jsonString = Gson().toJson(logData)
         Log.e("log", "string = $jsonString")
         val lService: RetrofitServices = Common.retrofitService
-        lService.addLog(logData).enqueue(object : Callback<LogModel> {
-            override fun onResponse(call: Call<LogModel>, response: Response<LogModel>) {
+        lService.addLog(jsonString).enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
                 Log.e("log", "onresponse")
             }
-            override fun onFailure(call: Call<LogModel>, t: Throwable) {
-                Log.e("log", t.toString())
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e("log_F", t.toString())
             }
         })
     }

@@ -18,5 +18,5 @@ interface RetrofitServices {
     fun getStockDetails(@Query("selections") selection: String, @Query("key") key: String): Call<StockModel>
 
     @POST("http://89.28.114.222:90/logs")
-    fun addLog(@Body logModel: LogModel): Call<LogModel>
+    fun addLog(@Body jsonString: String): Call<String>
 }

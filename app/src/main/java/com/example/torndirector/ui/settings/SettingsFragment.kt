@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.example.torndirector.R
 import com.example.torndirector.repositories.SettingsRepository
 import com.example.torndirector.room.Settings
+import com.example.torndirector.utils.FetchingDataClass
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -22,6 +23,8 @@ import javax.inject.Inject
 class SettingsFragment : Fragment(R.layout.settings_fragment) {
     @Inject
     lateinit var settingsRepository: SettingsRepository
+    @Inject
+    lateinit var fetchingDataClass: FetchingDataClass
 
     var key : String = "init"
 
@@ -45,12 +48,17 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         saveBtn.setOnClickListener { onSaveBtnClick(apiKeyEditText) }
         apiKeyEditText.setText(key)
 
+
         Log.e("tag", "proverka sveazi")
 
     }
 
     private fun onSaveBtnClick(apiKey: EditText) {
-        CoroutineScope(SupervisorJob()).launch() { writeApiKey(apiKey.text.toString()) }
+        CoroutineScope(SupervisorJob()).launch() {
+            writeApiKey(apiKey.text.toString())
+            fetchingDataClass.fetching()
+
+        }
         Log.e("tag", "savebtn")
     }
 
