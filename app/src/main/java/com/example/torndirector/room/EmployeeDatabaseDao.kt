@@ -1,15 +1,12 @@
 package com.example.torndirector.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 
 @Dao
 interface EmployeeDatabaseDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(employee: Employee)
     @Update
     suspend fun update(employee: Employee)

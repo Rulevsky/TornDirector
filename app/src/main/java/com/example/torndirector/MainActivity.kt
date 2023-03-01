@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         getData(this)
 
         bottomNavBar = findViewById(R.id.bottom_navigation)
@@ -77,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getData(activity: MainActivity) = runBlocking {
+    private fun getData(activity: MainActivity) {
         val periodicRequest = PeriodicWorkRequestBuilder<ExpeditedWorker>(
             1, TimeUnit.HOURS)
             .build()

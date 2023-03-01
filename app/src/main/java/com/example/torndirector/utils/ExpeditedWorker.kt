@@ -4,9 +4,17 @@ import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
+import com.example.torndirector.retrofit.Common
+import com.example.torndirector.retrofit.RetrofitServices
+import com.example.torndirector.retrofit.model.LogModel
+import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
 @HiltWorker
 class ExpeditedWorker @AssistedInject constructor(
@@ -15,13 +23,13 @@ class ExpeditedWorker @AssistedInject constructor(
     val fetchingDataClass: FetchingDataClass
 ):
 CoroutineWorker(appContext, workerParams){
-
     @Deprecated("use withContext(...) inside doWork() instead.")
     override val coroutineContext: CoroutineDispatcher
         get() = super.coroutineContext
 
     override suspend fun doWork(): Result {
         return try {
+            sendLog()
             fetchingDataClass.fetching()
             Result.success()
         } catch (e: Exception) {
@@ -32,5 +40,22 @@ CoroutineWorker(appContext, workerParams){
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return super.getForegroundInfo()
+    }
+
+
+    fun sendLog(){
+        val time : String = Calendar.getInstance().time.toString()
+        val logData = LogModel("xiaomi", "background", time)
+        val jsonString = Gson().toJson(logData)
+        Log.e("log", "string = $jsonString")
+        val lService: RetrofitServices = Common.retrofitService
+        lService.addLog(logData).enqueue(object : Callback<LogModel> {
+            override fun onResponse(call: Call<LogModel>, response: Response<LogModel>) {
+                Log.e("log", "onresponse")
+            }
+            override fun onFailure(call: Call<LogModel>, t: Throwable) {
+                Log.e("log", t.toString())
+            }
+        })
     }
 }

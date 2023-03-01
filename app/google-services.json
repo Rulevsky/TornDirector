@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1087207554530",
+    "project_id": "torndirector",
+    "storage_bucket": "torndirector.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087207554530:android:b7f08c7b5a2d73fdf7cdbb",
+        "android_client_info": {
+          "package_name": "com.example.torndirector"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087207554530-3he0tfo98pg5g9k46i0fe0jg0n95p58t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_wQLmWshKtIfA9DzwnP_9AKU-PW8mzxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087207554530-3he0tfo98pg5g9k46i0fe0jg0n95p58t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,15 +8,13 @@ import com.example.torndirector.repositories.SettingsRepository
 import com.example.torndirector.repositories.StockRepository
 import com.example.torndirector.retrofit.Common
 import com.example.torndirector.retrofit.RetrofitServices
-import com.example.torndirector.retrofit.model.CompanyModel
-import com.example.torndirector.retrofit.model.EmployeeModel
-import com.example.torndirector.retrofit.model.EmployeesModel
-import com.example.torndirector.retrofit.model.StockModel
+import com.example.torndirector.retrofit.model.*
 import com.example.torndirector.room.*
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 import javax.inject.Inject
 
 class FetchingDataClass @Inject constructor(
@@ -49,6 +47,9 @@ class FetchingDataClass @Inject constructor(
         }
         return apiKey
     }
+
+
+
 
     private fun fetchCompanyData(key: String, companyRepository: CompanyRepository) {
         val cService: RetrofitServices = Common.retrofitService
