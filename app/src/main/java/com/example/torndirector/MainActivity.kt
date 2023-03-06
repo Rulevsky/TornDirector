@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getData(this)
+        getData()
 
         bottomNavBar = findViewById(R.id.bottom_navigation)
         bottomNavBar.setOnItemSelectedListener { item ->
@@ -77,11 +77,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getData(activity: MainActivity) {
+    private fun getData() {
         val periodicRequest = PeriodicWorkRequestBuilder<ExpeditedWorker>(
-            1, TimeUnit.HOURS)
+            20,
+            TimeUnit.MINUTES)
             .build()
         WorkManager.getInstance(applicationContext).enqueue(periodicRequest)
+
     }
 
 }
